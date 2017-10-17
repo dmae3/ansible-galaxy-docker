@@ -1,0 +1,22 @@
+---
+- name: install python-devel
+  yum: name=python-devel state=present
+
+- name: install pip for awscli
+  yum: name=python-pip state=present
+
+- name: put docker repo
+  template: src=docker.repo.j2 dest=/etc/yum.repos.d/docker.repo mode=0644 owner=root group=root
+
+- name: install docker
+  yum: name=docker-engine-{{ docker_version }}
+
+- name: register docker to systemd
+  systemd: name=docker daemon_reload=yes state=started enabled=yes
+
+- name: create docker group
+  group: name=docker state=present
+
+- name: join user to docker group
+  user: name={{ item }} append=yes state=present groups=docker
+  with_items: "{{ docker_users }}"
