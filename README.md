@@ -36,7 +36,7 @@ Example Playbook
 - hosts: all
   become: true
   roles:
-    - role: docker
+    - role: galaxy-docker
       docker_users:
         - user1
         - user2
